@@ -6,20 +6,13 @@
     <title>Game</title>
 </head>
 <body>
-    <div id="head-div">
-        <div>ASTEROIDI</div>
-        <div id="last-time-div">
-
-        </div>
-        <div id="best-time-div">
-
-        </div>
-    </div>
     <audio id="crash-sound" preload="auto">
         <source src="crash-sound.mp3" type="audio/mp3">
     </audio>
     <div id="game-div">
-        <canvas id="game-canvas"></canvas>
+        <canvas id="game-canvas">
+
+        </canvas>
     </div>
     <script src="game.js"></script>
 </body>
@@ -43,7 +36,7 @@
 
     #spaceship-img {
         width: 45px;
-        height: 65px;
+        height: 55px;
     }
 
     #asteroid-img {
@@ -54,10 +47,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-left: 0%;
-        margin-right: 0%;
-        margin-bottom: 0%;
-        height: 600px;
+        height: 99vh;
+        width: 99vw;
+        margin: 1px;
     }
     #game-canvas {
         background-color: rgb(33, 29, 87);

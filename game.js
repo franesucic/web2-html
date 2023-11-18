@@ -7,10 +7,20 @@ spaceshipImage.src = 'spaceship.png';
 const asteroidImage = new Image();          // slika asteroida
 asteroidImage.src = 'asteroid.png';
 
-canvas.width = window.innerWidth;
+canvas.width = window.innerWidth;           // veličina canvas-a
 canvas.height = window.innerHeight;
 
 let asteroidInterval;
+
+// Postavljanje stila teksta
+ctx.font = '30px Arial';
+ctx.fillStyle = 'white';
+
+// funkcija za ispisivanje vremena
+function drawText() {
+    ctx.fillText('Vrijeme: ' + formatTime(elapsedTime), 50, 50);
+    ctx.fillText('Najbolje vrijeme: ' + formatTime(bestTime), 50, 100);
+}
 
 // Inicijalizacija objekta igrača
 const player = {
@@ -23,13 +33,14 @@ const player = {
 
 // Inicijalizacija asteroida
 const asteroids = [];
-const asteroidSpeed = 2;
-const asteroidSpawnInterval = 2000;     // period stvaranja asteroida
+const asteroidSpeed = 4;
+const asteroidSpawnInterval = 300;     // period stvaranja asteroida
+
+let elapsedTime = 0;
 
 // Inicijalizacija vremena
 let startTime = 0;
 let bestTime = localStorage.getItem("bestTime") || 0;
-document.getElementById("best-time-div").innerText = "Najbolje vrijeme: " + formatTime(bestTime);
 
 // Funkcija za crtanje igrača
 function drawPlayer() {
@@ -69,7 +80,6 @@ function endGame() {
         bestTime = currentTime;
         localStorage.setItem("bestTime", bestTime);     // ako je trenutno vrijeme bolje od dosadašnjeg najboljeg postavi ga za najbolje
     }
-    document.getElementById("best-time-div").innerText = "Najbolje vrijeme: " + formatTime(bestTime);
     alert("Ponovno pokreni:");
     resetGame();
 }
@@ -97,7 +107,7 @@ function moveAsteroids() {
         asteroid.x += asteroid.speedX;      // pomići asteroide prema zadanoj brzini
         asteroid.y += asteroid.speedY;
 
-        if (asteroid.x < 0 || asteroid.x > canvas.width) {      // ako je asteroid izvan canvasa
+        /*if (asteroid.x < 0 || asteroid.x > canvas.width) {      // ako je asteroid izvan canvasa
             if (asteroid.x < 0 && asteroid.x > -20 && asteroid.speedX > 0) {    // ako je s lijeve strane canvasa i ima smjer prema canvasu znači da je to početni asteroid i pusti ga unutra
                 asteroid.x = 0;
             } else if (asteroid.x > canvas.width && asteroid.x < canvas.width+20 && asteroid.speedX < 0) {  // isto ako je s desne strane
@@ -123,7 +133,7 @@ function moveAsteroids() {
                 asteroid.y = canvas.height;
                 asteroid.speedY *= -1;
             }
-        }
+        }*/
     }
 }
 
@@ -131,15 +141,16 @@ function moveAsteroids() {
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawPlayer();       // u svakom frame-u crtaj igrača, asteroide, provjeri koliziju i pomakni asteroide
+    drawPlayer();       // u svakom frame-u crtaj igrača, asteroide, ispiši vrijeme, provjeri koliziju i pomakni asteroide
     drawAsteroids();
+    drawText();
     checkCollision();
     moveAsteroids();
 
     // Ažuriranje vremena preživljavanja
     if (startTime) {
         const currentTime = new Date().getTime() - startTime;
-        document.getElementById("last-time-div").innerText = "Vrijeme: " + formatTime(currentTime);
+        elapsedTime = currentTime;
     }
 
     // Pokretanje igre
@@ -190,8 +201,8 @@ function spawnAsteroids() {
             y: initialY,
             width: 50,
             height: 50,
-            speedX: (Math.random() - 0.5) * 6, // Nasumična brzina u smjeru x
-            speedY: (Math.random() - 0.5) * 6  // Nasumična brzina u smjeru y
+            speedX: (Math.random() - 0.5) * 10, // Nasumična brzina u smjeru x
+            speedY: (Math.random() - 0.5) * 10  // Nasumična brzina u smjeru y
         };
         asteroids.push(asteroid);
     }
@@ -199,8 +210,8 @@ function spawnAsteroids() {
     // periodički stvaraj asteroide unutar područja igre
     asteroidInterval = setInterval(() => {
         const asteroid = {
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
+            x: Math.random() * canvas.width,        // nasumična pozicija meteora, x - os
+            y: Math.random() * canvas.height,       // y - os
             width: 50,
             height: 50,
             speedX: (Math.random() - 0.5) * 6, // Nasumična brzina 
